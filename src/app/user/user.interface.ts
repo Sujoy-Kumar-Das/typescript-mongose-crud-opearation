@@ -1,4 +1,4 @@
-export interface TName {
+export interface TUserName {
   firstName: string;
   lastName: string;
 }
@@ -13,7 +13,7 @@ export interface TUser {
   userId: number;
   username: string;
   password: string;
-  fullName: TName;
+  fullName: TUserName;
   age: number;
   email: string;
   isActive: boolean;

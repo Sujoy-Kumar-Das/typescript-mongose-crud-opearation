@@ -1,7 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-import { TAddress, TOrders, TUser, TUserName } from './user.interface';
+import {
+  TAddress,
+  TOrders,
+  TUser,
+  TUserModel,
+  TUserName,
+} from './user.interface';
 import config from '../config';
 
 // user name schema
@@ -28,7 +34,7 @@ const OrdersSchema = new Schema<TOrders>({
 });
 
 // user schema
-const UserSchema = new Schema<TUser>({
+const UserSchema = new Schema<TUser, TUserModel>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -65,7 +71,12 @@ UserSchema.methods.toJSON = function () {
   return user;
 };
 
+UserSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await UserModel.findOne({ userId: id });
+  return existingUser;
+};
+
 // user model
-const UserModel = mongoose.model('user', UserSchema);
+const UserModel = mongoose.model<TUser, TUserModel>('user', UserSchema);
 
 export default UserModel;

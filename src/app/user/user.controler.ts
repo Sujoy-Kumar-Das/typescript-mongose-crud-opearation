@@ -11,10 +11,10 @@ const createUserInDBControler = async (req: Request, res: Response) => {
       message: 'User Created successfully!',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: 'Something went wrong.',
+      message: error.message || 'Something went wrong.',
       error,
     });
   }
@@ -38,7 +38,30 @@ const getUsersFromDBControler = async (req: Request, res: Response) => {
   }
 };
 
+// get single user controler
+const getUserFromDBControler = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userServices.getUserFromDB(id);
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'Something went wrong.',
+      error: {
+        code: 404,
+        description: error.message || 'Server error.',
+      },
+    });
+  }
+};
+
 export const userControler = {
   createUserInDBControler,
   getUsersFromDBControler,
+  getUserFromDBControler,
 };

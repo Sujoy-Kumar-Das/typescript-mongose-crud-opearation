@@ -60,8 +60,23 @@ const getUserFromDBControler = async (req: Request, res: Response) => {
   }
 };
 
+// delete user
+const deleteUserFromDBControler = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userServices.deleteUserFromDB(id);
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully!',
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const userControler = {
   createUserInDBControler,
   getUsersFromDBControler,
   getUserFromDBControler,
+  deleteUserFromDBControler
 };

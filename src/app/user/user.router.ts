@@ -12,4 +12,7 @@ router.get('/', userControler.getUsersFromDBControler);
 // get single user router
 router.get('/:id', userControler.getUserFromDBControler);
 
+// delete user
+router.delete('/:id', userControler.deleteUserFromDBControler);
+
 export const userRouter = router;

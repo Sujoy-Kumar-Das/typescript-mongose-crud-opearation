@@ -1,5 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
-import { TAddress, TUser, TUserName } from './user.interface';
+import bcrypt from 'bcrypt';
+
+import { TAddress, TOrders, TUser, TUserName } from './user.interface';
+import config from '../config';
 
 // user name schema
 const UserNameSchema = new Schema<TUserName>({
@@ -8,10 +11,20 @@ const UserNameSchema = new Schema<TUserName>({
 });
 
 // user address schema
-const UserAddressSchema = new Schema<TAddress>({
-  street: { type: String, required: [true, 'Street is required.'] },
-  city: { type: String, required: [true, 'City is required.'] },
-  country: { type: String, required: [true, 'Country is required.'] },
+const UserAddressSchema = new Schema<TAddress>(
+  {
+    street: { type: String, required: [true, 'Street is required.'] },
+    city: { type: String, required: [true, 'City is required.'] },
+    country: { type: String, required: [true, 'Country is required.'] },
+  },
+  { _id: false },
+);
+
+// users orders schema
+const OrdersSchema = new Schema<TOrders>({
+  productName: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
 });
 
 // user schema
@@ -34,7 +47,23 @@ const UserSchema = new Schema<TUser>({
     type: UserAddressSchema,
     required: true,
   },
+  orders: OrdersSchema,
 });
+
+// user pre schema middleware for password hassing
+
+UserSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(user.password, Number(config.saltRounds));
+  next();
+});
+
+UserSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
 
 // user model
 const UserModel = mongoose.model('user', UserSchema);

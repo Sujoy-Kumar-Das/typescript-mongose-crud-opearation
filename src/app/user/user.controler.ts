@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { userServices } from './user.services';
-import UserValidationSchema, { OrderValidationSchema } from './user.validation';
+import { OrderValidationSchema, UserValidationSchema } from './user.validation';
 
 // create user controler
 const createUserInDBControler = async (req: Request, res: Response) => {
@@ -8,7 +8,7 @@ const createUserInDBControler = async (req: Request, res: Response) => {
     const { userData } = req.body;
 
     // validate data
-    const zodParseData = UserValidationSchema.parse(userData);
+    UserValidationSchema.parse(userData);
 
     const result = await userServices.createUserInDB(userData);
     res.status(200).json({
@@ -19,10 +19,12 @@ const createUserInDBControler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: error.message || 'something went wrong',
+      message:
+        error.issues[0].message || error.message || 'something went wrong',
       error: {
         code: 404,
-        description: error.message || 'something went wrong',
+        description:
+          error.issues[0].message || error.message || 'something went wrong',
       },
     });
   }
@@ -52,7 +54,7 @@ const getUsersFromDBControler = async (req: Request, res: Response) => {
 // get single user controler
 const getUserFromDBControler = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userId: id } = req.params;
     const result = await userServices.getUserFromDB(id);
     res.status(200).json({
       success: true,
@@ -74,11 +76,11 @@ const getUserFromDBControler = async (req: Request, res: Response) => {
 // update user information
 const updateUserInfoControler = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userId: id } = req.params;
     const { userData: updateUserdData } = req.body;
-
+    
     // validate data
-    const zodParseData = UserValidationSchema.parse(userData);
+    UserValidationSchema.parse(updateUserdData);
 
     const result = await userServices.updateUserInfo(id, updateUserdData);
 
@@ -90,10 +92,12 @@ const updateUserInfoControler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: error.message || 'Something went wrong.',
+      message:
+         error.message || 'Something went wrong.',
       error: {
         code: 404,
-        description: error.message || 'Server error.',
+        description:
+           error.message || 'Server error.',
         error: error,
       },
     });
@@ -103,7 +107,7 @@ const updateUserInfoControler = async (req: Request, res: Response) => {
 // delete user
 const deleteUserFromDBControler = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userId: id } = req.params;
     const result = await userServices.deleteUserFromDB(id);
     res.status(200).json({
       success: true,
@@ -125,11 +129,11 @@ const deleteUserFromDBControler = async (req: Request, res: Response) => {
 // post order
 const addOrderInDBControler = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userId: id } = req.params;
     const { orderData } = req.body;
 
     // validate data
-    const zodOrderValidation = OrderValidationSchema.parse(orderData);
+    OrderValidationSchema.parse(orderData);
 
     const result = await userServices.addOrderInDB(id, orderData);
     res.status(200).json({
@@ -140,10 +144,12 @@ const addOrderInDBControler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: error.message || 'something went wrong',
+      message:
+         error.message || 'something went wrong',
       error: {
         code: 404,
-        description: error.message || 'something went wrong',
+        description:
+           error.message || 'something went wrong',
       },
     });
   }
@@ -152,7 +158,7 @@ const addOrderInDBControler = async (req: Request, res: Response) => {
 // get order
 const getOrderFromDBControler = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userId: id } = req.params;
     const result = await userServices.getOrderFromDB(id);
     res.status(200).json({
       success: true,
@@ -174,7 +180,7 @@ const getOrderFromDBControler = async (req: Request, res: Response) => {
 // get total price
 const getTotalPriceFromDBControler = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userId: id } = req.params;
     const result = await userServices.getTotalPriceFromDB(id);
     res.status(200).json({
       success: true,
@@ -194,6 +200,7 @@ const getTotalPriceFromDBControler = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const userControler = {
   createUserInDBControler,
   getUsersFromDBControler,

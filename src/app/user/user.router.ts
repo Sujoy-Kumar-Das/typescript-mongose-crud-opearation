@@ -10,23 +10,23 @@ router.post('/', userControler.createUserInDBControler);
 router.get('/', userControler.getUsersFromDBControler);
 
 // get single user router
-router.get('/:id', userControler.getUserFromDBControler);
+router.get('/:userId', userControler.getUserFromDBControler);
 
 // update user information
-router.put('/:id', userControler.updateUserInfoControler);
+router.put('/:userId', userControler.updateUserInfoControler);
 
 // delete user
-router.delete('/:id', userControler.deleteUserFromDBControler);
+router.delete('/:userId', userControler.deleteUserFromDBControler);
 
 // add order
-router.patch('/:id/orders', userControler.addOrderInDBControler);
+router.put('/:userId/orders', userControler.addOrderInDBControler);
 
 // get order
-router.get('/:id/orders', userControler.getOrderFromDBControler);
+router.get('/:userId/orders', userControler.getOrderFromDBControler);
 
 // get total price
 router.get(
-  '/:id/orders/total-price',
+  '/:userId/orders/total-price',
   userControler.getTotalPriceFromDBControler,
 );
 

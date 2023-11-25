@@ -65,6 +65,11 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+
+// post middleware for find user data
+
+
+// method for remove password
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;

@@ -12,6 +12,9 @@ router.get('/', userControler.getUsersFromDBControler);
 // get single user router
 router.get('/:id', userControler.getUserFromDBControler);
 
+// update user information
+router.put('/:id', userControler.updateUserInfoControler);
+
 // delete user
 router.delete('/:id', userControler.deleteUserFromDBControler);
 

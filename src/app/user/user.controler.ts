@@ -14,8 +14,11 @@ const createUserInDBControler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: error.message || 'Something went wrong.',
-      error,
+      message: error.message || 'something went wrong',
+      error: {
+        code: 404,
+        description: error.message || 'something went wrong',
+      },
     });
   }
 };
@@ -29,11 +32,14 @@ const getUsersFromDBControler = async (req: Request, res: Response) => {
       message: 'Users loaded successfully.',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: 'User not found',
-      error: error,
+      message: error.message || 'something went wrong',
+      error: {
+        code: 404,
+        description: error.message || 'something went wrong',
+      },
     });
   }
 };
@@ -60,6 +66,30 @@ const getUserFromDBControler = async (req: Request, res: Response) => {
   }
 };
 
+// update user information
+const updateUserInfoControler = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { userData: updateUserdData } = req.body;
+    const result = await userServices.updateUserInfo(id, updateUserdData);
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'Something went wrong.',
+      error: {
+        code: 404,
+        description: error.message || 'Server error.',
+        error:error
+      },
+    });
+  }
+};
+
 // delete user
 const deleteUserFromDBControler = async (req: Request, res: Response) => {
   try {
@@ -70,13 +100,21 @@ const deleteUserFromDBControler = async (req: Request, res: Response) => {
       message: 'User deleted successfully!',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: {
+        code: 404,
+        description: error.message || 'something went wrong',
+      },
+    });
   }
 };
 export const userControler = {
   createUserInDBControler,
   getUsersFromDBControler,
   getUserFromDBControler,
-  deleteUserFromDBControler
+  updateUserInfoControler,
+  deleteUserFromDBControler,
 };

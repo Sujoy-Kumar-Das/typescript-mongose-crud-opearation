@@ -22,13 +22,29 @@ const getUserFromDB = async (id: string) => {
   return result;
 };
 
-const deleteUserFromDB = async (id: string) => {
-  const result = await UserModel.deleteOne({ userId: id });
+const updateUserInfo = async (id: string, updatedData: TUser) => {
+  if (!(await UserModel.isUserExists(id))) {
+    throw new Error('User not found.');
+  }
+  await UserModel.updateOne({ userId: id }, updatedData);
+  const result = await UserModel.isUserExists(id);
   return result;
 };
+
+const deleteUserFromDB = async (id: string) => {
+  if (!(await UserModel.isUserExists(id))) {
+    throw new Error('User already deleted.');
+  }
+  await UserModel.deleteOne({ userId: id });
+  const result = await UserModel.isUserExists(id);
+  return result;
+};
+
+
 export const userServices = {
   createUserInDB,
   getUsersFromDB,
   getUserFromDB,
+  updateUserInfo,
   deleteUserFromDB,
 };

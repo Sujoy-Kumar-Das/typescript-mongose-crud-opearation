@@ -27,11 +27,14 @@ const UserAddressSchema = new Schema<TAddress>(
 );
 
 // users orders schema
-const OrdersSchema = new Schema<TOrders>({
-  productName: { type: String, required: true },
-  price: { type: Number, required: true },
-  quantity: { type: Number, required: true },
-});
+const OrdersSchema = new Schema<TOrders>(
+  {
+    productName: { type: String, required: true },
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+  },
+  { _id: false },
+);
 
 // user schema
 const UserSchema = new Schema<TUser, TUserModel>({
@@ -53,7 +56,7 @@ const UserSchema = new Schema<TUser, TUserModel>({
     type: UserAddressSchema,
     required: true,
   },
-  orders: OrdersSchema,
+  orders: [OrdersSchema],
 });
 
 // user pre schema middleware for password hassing
@@ -65,9 +68,7 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-
 // post middleware for find user data
-
 
 // method for remove password
 UserSchema.methods.toJSON = function () {

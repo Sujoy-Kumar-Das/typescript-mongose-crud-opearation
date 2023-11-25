@@ -84,7 +84,7 @@ const updateUserInfoControler = async (req: Request, res: Response) => {
       error: {
         code: 404,
         description: error.message || 'Server error.',
-        error:error
+        error: error,
       },
     });
   }
@@ -111,10 +111,35 @@ const deleteUserFromDBControler = async (req: Request, res: Response) => {
     });
   }
 };
+
+// post order
+const addOrderInDBControler = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { orderData } = req.body;
+
+    const result = await userServices.addOrderInDB(id,orderData)
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: {
+        code: 404,
+        description: error.message || 'something went wrong',
+      },
+    });
+  }
+};
 export const userControler = {
   createUserInDBControler,
   getUsersFromDBControler,
   getUserFromDBControler,
   updateUserInfoControler,
   deleteUserFromDBControler,
+  addOrderInDBControler,
 };

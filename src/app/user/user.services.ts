@@ -1,4 +1,4 @@
-import { TUser } from './user.interface';
+import { TOrders, TUser } from './user.interface';
 import UserModel from './user.model';
 
 const createUserInDB = async (userData: TUser) => {
@@ -40,6 +40,17 @@ const deleteUserFromDB = async (id: string) => {
   return result;
 };
 
+const addOrderInDB = async (id: string, orderData: TOrders) => {
+  if (!(await UserModel.isUserExists(id))) {
+    throw new Error('User not found.');
+  }
+
+  await UserModel.updateOne({ userId: id }, { $addToSet: { orders: orderData } });
+
+  const result = await UserModel.isUserExists(id);
+
+  return result;
+};
 
 export const userServices = {
   createUserInDB,
@@ -47,4 +58,5 @@ export const userServices = {
   getUserFromDB,
   updateUserInfo,
   deleteUserFromDB,
+  addOrderInDB,
 };

@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
 import { userServices } from './user.services';
+import UserValidationSchema, { OrderValidationSchema } from './user.validation';
 
 // create user controler
 const createUserInDBControler = async (req: Request, res: Response) => {
   try {
     const { userData } = req.body;
+
+    // validate data
+    const zodParseData = UserValidationSchema.parse(userData);
+
     const result = await userServices.createUserInDB(userData);
     res.status(200).json({
       success: true,
@@ -71,7 +76,12 @@ const updateUserInfoControler = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { userData: updateUserdData } = req.body;
+
+    // validate data
+    const zodParseData = UserValidationSchema.parse(userData);
+
     const result = await userServices.updateUserInfo(id, updateUserdData);
+
     res.status(200).json({
       success: true,
       message: 'User updated successfully!',
@@ -117,6 +127,9 @@ const addOrderInDBControler = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { orderData } = req.body;
+
+    // validate data
+    const zodOrderValidation = OrderValidationSchema.parse(orderData);
 
     const result = await userServices.addOrderInDB(id, orderData);
     res.status(200).json({

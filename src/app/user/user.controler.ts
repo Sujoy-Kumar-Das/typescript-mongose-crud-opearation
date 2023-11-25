@@ -146,7 +146,31 @@ const getOrderFromDBControler = async (req: Request, res: Response) => {
       message: 'Order fetched successfully!',
       data: result,
     });
-  } catch (error:any) {
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: {
+        code: 404,
+        description: error.message || 'something went wrong',
+      },
+    });
+  }
+};
+
+// get total price
+const getTotalPriceFromDBControler = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userServices.getTotalPriceFromDB(id);
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: {
+        totalPrice: result,
+      },
+    });
+  } catch (error: any) {
     res.status(404).json({
       success: false,
       message: error.message || 'something went wrong',
@@ -165,4 +189,5 @@ export const userControler = {
   deleteUserFromDBControler,
   addOrderInDBControler,
   getOrderFromDBControler,
+  getTotalPriceFromDBControler,
 };

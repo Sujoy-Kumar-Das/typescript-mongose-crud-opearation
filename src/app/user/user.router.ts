@@ -24,4 +24,10 @@ router.patch('/:id/orders', userControler.addOrderInDBControler);
 // get order
 router.get('/:id/orders', userControler.getOrderFromDBControler);
 
+// get total price
+router.get(
+  '/:id/orders/total-price',
+  userControler.getTotalPriceFromDBControler,
+);
+
 export const userRouter = router;

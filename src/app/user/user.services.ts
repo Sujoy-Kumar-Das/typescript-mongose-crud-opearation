@@ -63,6 +63,22 @@ const getOrderFromDB = async (id: string) => {
   return result;
 };
 
+const getTotalPriceFromDB = async (id: string) => {
+  let totalPrice = 0;
+
+  if (!(await UserModel.isUserExists(id))) {
+    throw new Error('User not found.');
+  }
+
+  const user = await UserModel.findOne({ userId: id });
+
+  user?.orders?.forEach((order) => {
+    totalPrice = order.price * order.quantity + totalPrice;
+  });
+
+  return totalPrice;
+};
+
 export const userServices = {
   createUserInDB,
   getUsersFromDB,
@@ -71,4 +87,5 @@ export const userServices = {
   deleteUserFromDB,
   addOrderInDB,
   getOrderFromDB,
+  getTotalPriceFromDB,
 };

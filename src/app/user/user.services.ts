@@ -45,10 +45,21 @@ const addOrderInDB = async (id: string, orderData: TOrders) => {
     throw new Error('User not found.');
   }
 
-  await UserModel.updateOne({ userId: id }, { $addToSet: { orders: orderData } });
+  await UserModel.updateOne(
+    { userId: id },
+    { $addToSet: { orders: orderData } },
+  );
 
   const result = await UserModel.isUserExists(id);
 
+  return result;
+};
+
+const getOrderFromDB = async (id: string) => {
+  if (!(await UserModel.isUserExists(id))) {
+    throw new Error('User not found.');
+  }
+  const result = await UserModel.findOne({ userId: id }, { _id: 0, orders: 1 });
   return result;
 };
 
@@ -59,4 +70,5 @@ export const userServices = {
   updateUserInfo,
   deleteUserFromDB,
   addOrderInDB,
+  getOrderFromDB,
 };

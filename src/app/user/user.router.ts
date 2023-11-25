@@ -21,4 +21,7 @@ router.delete('/:id', userControler.deleteUserFromDBControler);
 // add order
 router.patch('/:id/orders', userControler.addOrderInDBControler);
 
+// get order
+router.get('/:id/orders', userControler.getOrderFromDBControler);
+
 export const userRouter = router;

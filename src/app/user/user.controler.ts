@@ -118,13 +118,35 @@ const addOrderInDBControler = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { orderData } = req.body;
 
-    const result = await userServices.addOrderInDB(id,orderData)
+    const result = await userServices.addOrderInDB(id, orderData);
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
       data: result,
     });
   } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: {
+        code: 404,
+        description: error.message || 'something went wrong',
+      },
+    });
+  }
+};
+
+// get order
+const getOrderFromDBControler = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userServices.getOrderFromDB(id);
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: result,
+    });
+  } catch (error:any) {
     res.status(404).json({
       success: false,
       message: error.message || 'something went wrong',
@@ -142,4 +164,5 @@ export const userControler = {
   updateUserInfoControler,
   deleteUserFromDBControler,
   addOrderInDBControler,
+  getOrderFromDBControler,
 };

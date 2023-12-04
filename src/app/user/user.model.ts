@@ -70,7 +70,10 @@ const UserSchema = new Schema<TUser, TUserModel>({
     type: UserAddressSchema,
     required: true,
   },
-  orders: [OrdersSchema],
+  orders: {
+    type: [OrdersSchema],
+    default: [],
+  },
 });
 
 // user pre schema middleware for password hassing

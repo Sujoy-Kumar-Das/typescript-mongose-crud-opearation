@@ -21,7 +21,7 @@ const AddressValidationSchema = z.object({
     .min(1, { message: 'Country name must be at least 1 character long' }),
 });
 
-const OrdersProperty = z.object({
+const OrderNameValidationSchema = z.object({
   productName: z
     .string()
     .min(1, { message: 'Product name must be at least 1 character long' }),
@@ -29,7 +29,7 @@ const OrdersProperty = z.object({
   quantity: z.number().min(1, { message: 'Quantity must be at least 1' }),
 });
 
-export const OrderValidationSchema = z.array(OrdersProperty);
+export const OrderValidationSchema = z.array(OrderNameValidationSchema);
 
 export const UserValidationSchema = z.object({
   userId: z.number().positive({ message: 'User ID must be a positive number' }),
@@ -47,5 +47,5 @@ export const UserValidationSchema = z.object({
     .array(z.string())
     .min(1, { message: 'At least one hobby must be provided' }),
   address: AddressValidationSchema,
-  orders: OrderValidationSchema.optional(),
+  orders: z.array(OrderValidationSchema).optional(),
 });

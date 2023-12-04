@@ -6,11 +6,10 @@ import { OrderValidationSchema, UserValidationSchema } from './user.validation';
 const createUserInDBControler = async (req: Request, res: Response) => {
   try {
     const { userData } = req.body;
-
     // validate data
-    UserValidationSchema.parse(userData);
+    const validateData = UserValidationSchema.parse(userData);
 
-    const result = await userServices.createUserInDB(userData);
+    const result = await userServices.createUserInDB(validateData);
     res.status(200).json({
       success: true,
       message: 'User Created successfully!',
@@ -19,12 +18,10 @@ const createUserInDBControler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message:
-        error.issues[0].message || error.message || 'something went wrong',
+      message: error.message || 'something went wrong',
       error: {
         code: 404,
-        description:
-          error.issues[0].message || error.message || 'something went wrong',
+        description: error || error || 'something went wrong',
       },
     });
   }
@@ -78,7 +75,7 @@ const updateUserInfoControler = async (req: Request, res: Response) => {
   try {
     const { userId: id } = req.params;
     const { userData: updateUserdData } = req.body;
-    
+
     // validate data
     UserValidationSchema.parse(updateUserdData);
 
@@ -92,12 +89,10 @@ const updateUserInfoControler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message:
-         error.message || 'Something went wrong.',
+      message: error.message || 'Something went wrong.',
       error: {
         code: 404,
-        description:
-           error.message || 'Server error.',
+        description: error.message || 'Server error.',
         error: error,
       },
     });
@@ -144,12 +139,10 @@ const addOrderInDBControler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message:
-         error.message || 'something went wrong',
+      message: error.message || 'something went wrong',
       error: {
         code: 404,
-        description:
-           error.message || 'something went wrong',
+        description: error.message || 'something went wrong',
       },
     });
   }

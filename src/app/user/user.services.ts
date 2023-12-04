@@ -26,8 +26,9 @@ const updateUserInfo = async (id: string, updatedData: TUser) => {
   if (!(await UserModel.isUserExists(id))) {
     throw new Error('User not found.');
   }
-  await UserModel.updateOne({ userId: id }, updatedData);
-  const result = await UserModel.isUserExists(id);
+  const result = await UserModel.findOneAndUpdate({ userId: id }, updatedData, {
+    new: true,
+  });
   return result;
 };
 
@@ -45,12 +46,11 @@ const addOrderInDB = async (id: string, orderData: TOrders) => {
     throw new Error('User not found.');
   }
 
-  await UserModel.updateOne(
+  const result = await UserModel.findOneAndUpdate(
     { userId: id },
-    { $addToSet: { orders: orderData } },
+    { $push: { orders: orderData } },
+    { new: true },
   );
-
-  const result = await UserModel.isUserExists(id);
 
   return result;
 };

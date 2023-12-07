@@ -1,13 +1,16 @@
 import { Request, Response } from 'express';
 import { userServices } from './user.services';
-import { OrderValidationSchema, UserValidationSchema } from './user.validation';
+import {
+  OrderValidationSchema,
+  UpdateValidationSchema,
+  UserValidationSchema,
+} from './user.validation';
 
 // create user controler
 const createUserInDBControler = async (req: Request, res: Response) => {
   try {
-    const { userData } = req.body;
     // validate data
-    const validateData = UserValidationSchema.parse(userData);
+    const validateData = UserValidationSchema.parse(req.body);
 
     const result = await userServices.createUserInDB(validateData);
     res.status(200).json({
@@ -73,13 +76,12 @@ const getUserFromDBControler = async (req: Request, res: Response) => {
 // update user information
 const updateUserInfoControler = async (req: Request, res: Response) => {
   try {
-    const { userId: id } = req.params;
-    const { userData: updateUserdData } = req.body;
-
-    // validate data
-    UserValidationSchema.parse(updateUserdData);
-
-    const result = await userServices.updateUserInfo(id, updateUserdData);
+    const { userId } = req.params;
+    const validateUpdatedData = UpdateValidationSchema.parse(req.body);
+    const result = await userServices.updateUserInfo(
+      userId,
+      validateUpdatedData,
+    );
 
     res.status(200).json({
       success: true,
@@ -102,8 +104,8 @@ const updateUserInfoControler = async (req: Request, res: Response) => {
 // delete user
 const deleteUserFromDBControler = async (req: Request, res: Response) => {
   try {
-    const { userId: id } = req.params;
-    const result = await userServices.deleteUserFromDB(id);
+    const { userId } = req.params;
+    const result = await userServices.deleteUserFromDB(userId);
     res.status(200).json({
       success: true,
       message: 'User deleted successfully!',
@@ -124,13 +126,10 @@ const deleteUserFromDBControler = async (req: Request, res: Response) => {
 // post order
 const addOrderInDBControler = async (req: Request, res: Response) => {
   try {
-    const { userId: id } = req.params;
-    const { orderData } = req.body;
+    const { userId } = req.params;
 
     // validate data
-    OrderValidationSchema.parse(orderData);
-
-    const result = await userServices.addOrderInDB(id, orderData);
+    const result = await userServices.addOrderInDB(userId, req.body);
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
@@ -151,8 +150,8 @@ const addOrderInDBControler = async (req: Request, res: Response) => {
 // get order
 const getOrderFromDBControler = async (req: Request, res: Response) => {
   try {
-    const { userId: id } = req.params;
-    const result = await userServices.getOrderFromDB(id);
+    const { userId } = req.params;
+    const result = await userServices.getOrderFromDB(userId);
     res.status(200).json({
       success: true,
       message: 'Order fetched successfully!',
@@ -173,8 +172,8 @@ const getOrderFromDBControler = async (req: Request, res: Response) => {
 // get total price
 const getTotalPriceFromDBControler = async (req: Request, res: Response) => {
   try {
-    const { userId: id } = req.params;
-    const result = await userServices.getTotalPriceFromDB(id);
+    const { userId } = req.params;
+    const result = await userServices.getTotalPriceFromDB(userId);
     res.status(200).json({
       success: true,
       message: 'Total price calculated successfully!',

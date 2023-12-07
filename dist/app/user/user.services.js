@@ -32,44 +32,44 @@ const getUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.default.findOne({ userId: id });
     return result;
 });
-const updateUserInfo = (id, updatedData) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(yield user_model_1.default.isUserExists(id))) {
+const updateUserInfo = (userId, updatedData) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(yield user_model_1.default.isUserExists(userId))) {
         throw new Error('User not found.');
     }
-    const result = yield user_model_1.default.findOneAndUpdate({ userId: id }, updatedData, {
+    const result = yield user_model_1.default.findOneAndUpdate({ userId }, updatedData, {
         new: true,
     });
     return result;
 });
-const deleteUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(yield user_model_1.default.isUserExists(id))) {
+const deleteUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(yield user_model_1.default.isUserExists(userId))) {
         throw new Error('User already deleted.');
     }
-    yield user_model_1.default.deleteOne({ userId: id });
-    const result = yield user_model_1.default.isUserExists(id);
+    yield user_model_1.default.deleteOne({ userId });
+    const result = yield user_model_1.default.isUserExists(userId);
     return result;
 });
-const addOrderInDB = (id, orderData) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(yield user_model_1.default.isUserExists(id))) {
+const addOrderInDB = (userId, orderData) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(yield user_model_1.default.isUserExists(userId))) {
         throw new Error('User not found.');
     }
-    const result = yield user_model_1.default.findOneAndUpdate({ userId: id }, { $push: { orders: orderData } }, { new: true });
+    const result = yield user_model_1.default.findOneAndUpdate({ userId }, { $push: { orders: orderData } }, { new: true });
     return result;
 });
-const getOrderFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(yield user_model_1.default.isUserExists(id))) {
+const getOrderFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(yield user_model_1.default.isUserExists(userId))) {
         throw new Error('User not found.');
     }
-    const result = yield user_model_1.default.findOne({ userId: id }, { _id: 0, orders: 1 });
+    const result = yield user_model_1.default.findOne({ userId }, { _id: 0, orders: 1 });
     return result;
 });
-const getTotalPriceFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getTotalPriceFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     let totalPrice = 0;
-    if (!(yield user_model_1.default.isUserExists(id))) {
+    if (!(yield user_model_1.default.isUserExists(userId))) {
         throw new Error('User not found.');
     }
-    const user = yield user_model_1.default.findOne({ userId: id });
+    const user = yield user_model_1.default.findOne({ userId });
     (_a = user === null || user === void 0 ? void 0 : user.orders) === null || _a === void 0 ? void 0 : _a.forEach((order) => {
         totalPrice = order.price * order.quantity + totalPrice;
     });

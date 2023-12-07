@@ -15,9 +15,8 @@ const user_validation_1 = require("./user.validation");
 // create user controler
 const createUserInDBControler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userData } = req.body;
         // validate data
-        const validateData = user_validation_1.UserValidationSchema.parse(userData);
+        const validateData = user_validation_1.UserValidationSchema.parse(req.body);
         const result = yield user_services_1.userServices.createUserInDB(validateData);
         res.status(200).json({
             success: true,
@@ -82,11 +81,9 @@ const getUserFromDBControler = (req, res) => __awaiter(void 0, void 0, void 0, f
 // update user information
 const updateUserInfoControler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId: id } = req.params;
-        const { userData: updateUserdData } = req.body;
-        // validate data
-        user_validation_1.UserValidationSchema.parse(updateUserdData);
-        const result = yield user_services_1.userServices.updateUserInfo(id, updateUserdData);
+        const { userId } = req.params;
+        const validateUpdatedData = user_validation_1.UpdateValidationSchema.parse(req.body);
+        const result = yield user_services_1.userServices.updateUserInfo(userId, validateUpdatedData);
         res.status(200).json({
             success: true,
             message: 'User updated successfully!',
@@ -108,8 +105,8 @@ const updateUserInfoControler = (req, res) => __awaiter(void 0, void 0, void 0, 
 // delete user
 const deleteUserFromDBControler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId: id } = req.params;
-        const result = yield user_services_1.userServices.deleteUserFromDB(id);
+        const { userId } = req.params;
+        const result = yield user_services_1.userServices.deleteUserFromDB(userId);
         res.status(200).json({
             success: true,
             message: 'User deleted successfully!',
@@ -130,11 +127,9 @@ const deleteUserFromDBControler = (req, res) => __awaiter(void 0, void 0, void 0
 // post order
 const addOrderInDBControler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId: id } = req.params;
-        const { orderData } = req.body;
+        const { userId } = req.params;
         // validate data
-        user_validation_1.OrderValidationSchema.parse(orderData);
-        const result = yield user_services_1.userServices.addOrderInDB(id, orderData);
+        const result = yield user_services_1.userServices.addOrderInDB(userId, req.body);
         res.status(200).json({
             success: true,
             message: 'Order created successfully!',
@@ -155,8 +150,8 @@ const addOrderInDBControler = (req, res) => __awaiter(void 0, void 0, void 0, fu
 // get order
 const getOrderFromDBControler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId: id } = req.params;
-        const result = yield user_services_1.userServices.getOrderFromDB(id);
+        const { userId } = req.params;
+        const result = yield user_services_1.userServices.getOrderFromDB(userId);
         res.status(200).json({
             success: true,
             message: 'Order fetched successfully!',
@@ -177,8 +172,8 @@ const getOrderFromDBControler = (req, res) => __awaiter(void 0, void 0, void 0, 
 // get total price
 const getTotalPriceFromDBControler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId: id } = req.params;
-        const result = yield user_services_1.userServices.getTotalPriceFromDB(id);
+        const { userId } = req.params;
+        const result = yield user_services_1.userServices.getTotalPriceFromDB(userId);
         res.status(200).json({
             success: true,
             message: 'Total price calculated successfully!',

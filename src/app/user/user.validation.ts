@@ -49,3 +49,31 @@ export const UserValidationSchema = z.object({
   address: AddressValidationSchema,
   orders: OrderValidationSchema.optional(),
 });
+
+export const UpdateValidationSchema = z.object({
+  userId: z
+    .number()
+    .positive({ message: 'User ID must be a positive number' })
+    .optional(),
+  username: z
+    .string()
+    .min(1, { message: 'Username must be at least 1 character long' })
+    .optional(),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long' })
+    .optional(),
+  fullName: UserNameValidationSchema.optional(),
+  age: z
+    .number()
+    .min(0, { message: 'Age must be a positive number' })
+    .optional(),
+  email: z.string().email({ message: 'Invalid email format' }).optional(),
+  isActive: z.boolean().optional(),
+  hobbies: z
+    .array(z.string())
+    .min(1, { message: 'At least one hobby must be provided' })
+    .optional(),
+  address: AddressValidationSchema.optional(),
+  orders: OrderValidationSchema.optional(),
+});

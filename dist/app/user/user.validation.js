@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserValidationSchema = exports.OrderValidationSchema = void 0;
+exports.UpdateValidationSchema = exports.UserValidationSchema = exports.OrderValidationSchema = void 0;
 const zod_1 = require("zod");
 const UserNameValidationSchema = zod_1.z.object({
     firstName: zod_1.z
@@ -45,5 +45,32 @@ exports.UserValidationSchema = zod_1.z.object({
         .array(zod_1.z.string())
         .min(1, { message: 'At least one hobby must be provided' }),
     address: AddressValidationSchema,
+    orders: exports.OrderValidationSchema.optional(),
+});
+exports.UpdateValidationSchema = zod_1.z.object({
+    userId: zod_1.z
+        .number()
+        .positive({ message: 'User ID must be a positive number' })
+        .optional(),
+    username: zod_1.z
+        .string()
+        .min(1, { message: 'Username must be at least 1 character long' })
+        .optional(),
+    password: zod_1.z
+        .string()
+        .min(8, { message: 'Password must be at least 8 characters long' })
+        .optional(),
+    fullName: UserNameValidationSchema.optional(),
+    age: zod_1.z
+        .number()
+        .min(0, { message: 'Age must be a positive number' })
+        .optional(),
+    email: zod_1.z.string().email({ message: 'Invalid email format' }).optional(),
+    isActive: zod_1.z.boolean().optional(),
+    hobbies: zod_1.z
+        .array(zod_1.z.string())
+        .min(1, { message: 'At least one hobby must be provided' })
+        .optional(),
+    address: AddressValidationSchema.optional(),
     orders: exports.OrderValidationSchema.optional(),
 });

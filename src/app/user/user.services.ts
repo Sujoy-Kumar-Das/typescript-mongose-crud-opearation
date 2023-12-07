@@ -22,32 +22,32 @@ const getUserFromDB = async (id: string) => {
   return result;
 };
 
-const updateUserInfo = async (id: string, updatedData: TUser) => {
-  if (!(await UserModel.isUserExists(id))) {
+const updateUserInfo = async (userId: string, updatedData: Partial<TUser>) => {
+  if (!(await UserModel.isUserExists(userId))) {
     throw new Error('User not found.');
   }
-  const result = await UserModel.findOneAndUpdate({ userId: id }, updatedData, {
+  const result = await UserModel.findOneAndUpdate({ userId }, updatedData, {
     new: true,
   });
   return result;
 };
 
-const deleteUserFromDB = async (id: string) => {
-  if (!(await UserModel.isUserExists(id))) {
+const deleteUserFromDB = async (userId: string) => {
+  if (!(await UserModel.isUserExists(userId))) {
     throw new Error('User already deleted.');
   }
-  await UserModel.deleteOne({ userId: id });
-  const result = await UserModel.isUserExists(id);
+  await UserModel.deleteOne({ userId });
+  const result = await UserModel.isUserExists(userId);
   return result;
 };
 
-const addOrderInDB = async (id: string, orderData: TOrders) => {
-  if (!(await UserModel.isUserExists(id))) {
+const addOrderInDB = async (userId: string, orderData: TOrders) => {
+  if (!(await UserModel.isUserExists(userId))) {
     throw new Error('User not found.');
   }
 
   const result = await UserModel.findOneAndUpdate(
-    { userId: id },
+    { userId },
     { $push: { orders: orderData } },
     { new: true },
   );
@@ -55,22 +55,22 @@ const addOrderInDB = async (id: string, orderData: TOrders) => {
   return result;
 };
 
-const getOrderFromDB = async (id: string) => {
-  if (!(await UserModel.isUserExists(id))) {
+const getOrderFromDB = async (userId: string) => {
+  if (!(await UserModel.isUserExists(userId))) {
     throw new Error('User not found.');
   }
-  const result = await UserModel.findOne({ userId: id }, { _id: 0, orders: 1 });
+  const result = await UserModel.findOne({ userId }, { _id: 0, orders: 1 });
   return result;
 };
 
-const getTotalPriceFromDB = async (id: string) => {
+const getTotalPriceFromDB = async (userId: string) => {
   let totalPrice = 0;
 
-  if (!(await UserModel.isUserExists(id))) {
+  if (!(await UserModel.isUserExists(userId))) {
     throw new Error('User not found.');
   }
 
-  const user = await UserModel.findOne({ userId: id });
+  const user = await UserModel.findOne({ userId });
 
   user?.orders?.forEach((order) => {
     totalPrice = order.price * order.quantity + totalPrice;
